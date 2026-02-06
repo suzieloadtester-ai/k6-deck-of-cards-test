@@ -1,61 +1,143 @@
-<div align="center">
-  
-  ![banner](docs/ts-js-k6.png)
-
-# Template to use TypeScript with k6
-
-![.github/workflows/push.yml](https://github.com/grafana/k6-template-typescript/workflows/.github/workflows/push.yml/badge.svg?branch=main)
-
-</div>
-
-This repository provides a scaffolding project to start using TypeScript in your k6 scripts.
-
-## Rationale
-
-While JavaScript is great for a myriad of reasons, one area where it fall short is type safety and developer ergonomics. It's perfectly possible to write JavaScript code that will look OK and behave OK until a certain condition forces the executor into a faulty branch.
-
-While it, of course, still is possible to shoot yourself in the foot with TypeScript as well, it's significantly harder. Without adding much overhead, TypeScript will:
-
-- Improve the ability to safely refactor your code.
-- Improve readability and maintainability.
-- Allow you to drop a lot of the defensive code previously needed to make sure consumers are calling functions properly.
+# **Performance Test Plan: Deck of Cards API**
 
 
-## Installation
+## **Introduction**
 
-**Creating a project from the `template-typescript` template**
-
-To generate a TypeScript project that includes the dependencies and initial configuration, navigate to the [template-typescript](https://github.com/grafana/k6-template-typescript) page and click **Use this template**.
-
-  ![](docs/use-this-template-button.png)
+The goal is to evaluate the stability and responsiveness of the Deck of Cards API during card shuffling, drawing, and stateful pile management under concurrent load.
 
 
-**Install dependencies**
+## **How to Run the Tests**
 
-Clone the generated repository on your local machine, move to the project root folder and install the dependencies defined in [`package.json`](./package.json)
 
-```bash
-npm install
-```
+### **1. Prerequisites**
 
-## Running the test
+Ensure you have Node.js (v18+) and the k6 CLI installed on your machine.
 
-To run a test written in TypeScript, we first have to transpile the TypeScript code into JavaScript running a bundler. This project uses `Babel` and `Webpack` to bundle the different files into ES modules (ESM), using its [`webpack.config.js`](./webpack.config.js) configuration.
 
-The next command transforms each TypeScript test in `./src` to the `./dist` folder as ES modules.
+### **2. Setup**
 
-```bash
-npm run bundle
-```
+Clone the repository and install the developer dependencies:
 
-Once that is done, we can run our script the same way we usually do, for instance:
+npm install 
 
-```bash
-k6 run dist/get-200-status-test.js
-```
 
-**See also**
 
-- [Using k6 / Modules](https://grafana.com/docs/k6/latest/using-k6/modules/)
-- [Using k6 / JavaScript compatibility mode](https://grafana.com/docs/k6/latest/using-k6/javascript-compatibility-mode/)
-- [grafana/k6-rollup-example](https://github.com/grafana/k6-rollup-example)
+### **3. Build and Execute**
+
+Because this project uses TypeScript, the source code must be bundled into JavaScript before k6 can run it.
+
+**Step 1: Bundle the TypeScript files**
+
+npm run bundle 
+
+
+**Step 2: Run a specific test**
+
+k6 run dist/get-200-status-test.js 
+
+
+
+## **Scope**
+
+This section lists the components and activities in scope for testing.
+
+
+
+* **In Scope:** Deck management (creation/shuffling), card operations (drawing), and stateful piles (adding/listing).
+* **Out of Scope:** Frontend UI performance and external authentication providers.
+
+
+## **Performance Acceptance Criteria or SLAs**
+
+This section describes what constitutes a successful test.
+
+
+
+* **Latency:** 95% of requests (p95) must be under 500ms.
+* **Success Rate:** 99% of all requests must return HTTP 200.
+* **Data Integrity:** 100% accuracy in card counts when moving cards to player piles.
+
+
+## **Test Environment**
+
+This section describes the test environment.
+
+
+
+* **Load Generation:** k6 Open Source.
+* **Scripting:** TypeScript (bundled via Webpack).
+* **Target URLs:**
+    * Local: http://localhost:8080 (or your configured local port)
+    * Production: https://deckofcardsapi.com
+
+
+## **Entry Criteria**
+
+The following criteria must be met to start testing:
+
+
+
+* Node.js and k6 environment configured.
+* Successful execution of npm run bundle without errors.
+* Connectivity to the target API verified via a single-user smoke test.
+
+
+## **Exit Criteria**
+
+Testing will conclude when:
+
+
+
+* All planned Peak and Stress scenarios have been executed.
+* Performance metrics (latency, error rate) have been captured and analyzed.
+* Any identified defects or bottlenecks have been documented.
+
+
+## **Scenario: Peak Load Test**
+
+This test determines how the system behaves under a sustained concurrent load.
+
+
+### **Data Creation and Setup**
+
+Virtual Users (VUs) will initialize a 6-deck shoe to ensure a large pool of cards is available, preventing deck exhaustion errors during the test.
+
+
+### **Workload Model and Distribution**
+
+
+
+* **Traffic:** 50 Concurrent Virtual Users.
+* **Pattern:** 2-minute ramp-up followed by a 10-minute plateau.
+* **Behavior:** Users will draw 2 cards and move them to a player-specific pile every iteration.
+
+
+## **Scenario: Stress and Breakpoint Test**
+
+This test identifies the maximum capacity of the API before it returns rate-limiting (429) or server errors (5xx).
+
+
+### **Workload Model and Distribution**
+
+
+
+* **Pattern:** Linear ramp from 1 to 200 Virtual Users over 15 minutes.
+* **Metrics:** Monitoring for error rate spikes and significant latency degradation at specific VU counts.
+
+
+## **Deliverables**
+
+
+
+* **Scripts:** TypeScript source files located in the /src directory.
+* **Results:** k6 summary reports and console logs.
+* **Analysis:** Documentation of findings regarding the performance of stateful operations.
+
+
+## **Tools and Storage**
+
+
+
+* **Version Control:** GitHub.
+* **Engine:** Node.js / npm.
+* **Execution Tool:** k6 CLI.
