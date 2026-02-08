@@ -1,6 +1,6 @@
 import { sleep, group } from 'k6';
 import { DeckService } from './services/deckService';
-import { commonStages, commonThresholds } from './config';
+import { commonThresholds } from './config';
 
 const scenarioStages = [
   { duration: '5s', target: 1 },

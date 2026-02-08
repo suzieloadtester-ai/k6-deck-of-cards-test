@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import { BASE_URL } from '../config';
+import { BASE_URL, trends } from '../config';
 
 export class DeckService {
 
@@ -9,6 +9,7 @@ export class DeckService {
     check(res, {
       'shuffle success': (r) => r.status === 200,
     });
+    trends.CreateShuffle.add(res.timings.duration);
     return res.json('deck_id') as string;
   }
 
@@ -17,6 +18,7 @@ export class DeckService {
     check(res, {
       'draw success': (r) => r.status === 200,
     });
+    trends.DrawCards.add(res.timings.duration);
     return res;
   }
 
@@ -28,6 +30,7 @@ export class DeckService {
       'add to pile status is 200': (r) => r.status === 200,
       'pile has cards': (r) => (r.json(`piles.${pileName}.remaining`) as number) > 0,
     });
+    trends.AddToPile.add(res.timings.duration);
     return res;
   }
 
@@ -36,6 +39,7 @@ export class DeckService {
     check(res, {
       'list pile success': (r) => r.status === 200,
     });
+    trends.ListPile.add(res.timings.duration);
     return res;
   }
 }

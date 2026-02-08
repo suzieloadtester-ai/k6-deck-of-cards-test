@@ -1,4 +1,5 @@
 import { Options } from 'k6/options';
+import { Trend } from 'k6/metrics';
 
 export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
 
@@ -18,4 +19,11 @@ export const commonThresholds = {
 export const defaultOptions: Options = {
   stages: commonStages,
   thresholds: commonThresholds,
+};
+
+export const trends: { [tag: string]: Trend } = {
+  CreateShuffle: new Trend('Trend_CreateShuffle', true),
+  DrawCards: new Trend('Trend_DrawCards', true),
+  AddToPile: new Trend('Trend_AddToPile', true),
+  ListPile: new Trend('Trend_ListPile', true),
 };
