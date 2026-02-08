@@ -1,37 +1,29 @@
 import { sleep, group } from 'k6';
-import { Options } from 'k6/options';
 import { DeckService } from './services/deckService';
+import { commonStages, commonThresholds } from './config';
 
+const scenarioStages = [
+  { duration: '5s', target: 1 },
+  { duration: '20s', target: 1 },
+  { duration: '5s', target: 0 },
+];
 
-export const options: Options = {
+export const options = {
   scenarios: {
     player1: {
       executor: 'ramping-vus',
       startVUs: 0,
-      stages: [
-        { duration: '5s', target: 1 },
-        { duration: '20s', target: 1 },
-        { duration: '5s', target: 0 },
-      ],
+      stages: scenarioStages,
       exec: 'player1',
     },
     player2: {
       executor: 'ramping-vus',
       startVUs: 0,
-      stages: [
-        { duration: '5s', target: 1 },
-        { duration: '20s', target: 1 },
-        { duration: '5s', target: 0 },
-      ],
+      stages: scenarioStages,
       exec: 'player2',
     },
   },
-  thresholds: {
-    'http_req_duration{name:CreateShuffle}': ['p(95)<5000'],
-    'http_req_duration{name:DrawCards}': ['p(95)<5000'],
-    'http_req_duration{name:AddToPile}': ['p(95)<5000'],
-    'http_req_duration{name:ListPile}': ['p(95)<5000'],
-  },
+  thresholds: commonThresholds,
 };
 export function setup() {
   const deck1 = DeckService.createAndShuffle(1);

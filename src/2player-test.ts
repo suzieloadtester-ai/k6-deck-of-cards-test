@@ -1,21 +1,8 @@
 import { sleep, group } from 'k6';
-import { Options } from 'k6/options';
 import { DeckService } from './services/deckService';
+import { defaultOptions } from './config';
 
-
-export const options: Options = {
-  stages: [
-    { duration: '5s', target: 2 },
-    { duration: '20s', target: 2 },
-    { duration: '5s', target: 0 },
-  ],
-  thresholds: {
-    'http_req_duration{name:CreateShuffle}': ['p(95)<5000'],
-    'http_req_duration{name:DrawCards}': ['p(95)<5000'],
-    'http_req_duration{name:AddToPile}': ['p(95)<5000'],
-    'http_req_duration{name:ListPile}': ['p(95)<5000'],
-  },
-};
+export const options = defaultOptions;
 
 export default function () {
   group('2 Player Deck Workflow', () => {
