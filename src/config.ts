@@ -1,5 +1,7 @@
 import { Options } from 'k6/options';
 
+export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
+
 export const commonStages = [
   { duration: '5s', target: 2 },
   { duration: '20s', target: 2 },

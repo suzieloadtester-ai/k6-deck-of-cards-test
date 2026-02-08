@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
-
-const BASE_URL = 'https://deckofcardsapi.com/api/deck';
+import { BASE_URL } from '../config';
 
 export class DeckService {
 

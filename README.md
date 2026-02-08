@@ -93,6 +93,38 @@ Testing will conclude when:
 * Any identified defects or bottlenecks have been documented.
 
 
+## **Test Scripts**
+
+The following test scripts are available in the `/src` directory:
+
+### **2player-test.ts**
+Simulates a 2-player card game workflow with sequential operations:
+- Creates a shuffled deck with 1 deck shoe
+- Player 1 draws 1-50 random cards
+- Player 2 draws 1-50 random cards  
+- Both players' cards are added to player-specific piles
+- Load: 2 concurrent VUs for 30 seconds (5s ramp-up, 20s plateau, 5s ramp-down)
+
+### **2playerParallel-test.ts** 
+Similar to 2player-test but with parallel execution:
+- Uses k6 scenarios to run Player 1 and Player 2 concurrently
+- Each player operates on their own separate deck
+- Tests parallel load handling with independent scenarios
+- Same load profile as 2player-test but distributed across scenarios
+
+### **draw2shuffle-test.ts**
+Tests the advanced deck workflow:
+- Creates a shuffled deck with 1 deck shoe
+- Draws 1-50 random cards in a single operation
+- Adds all drawn cards to a player pile
+- Load: 2 concurrent VUs for 30 seconds (5s ramp-up, 20s plateau, 5s ramp-down)
+- Simpler workflow for measuring core operations
+
+**Shared Configuration:**
+All three tests use performance thresholds and stages defined in `config.ts`:
+- **Latency SLA:** p95 < 5 seconds for all operations
+- **Operations monitored:** CreateShuffle, DrawCards, AddToPile, ListPile
+
 ## **Scenario: Peak Load Test**
 
 This test determines how the system behaves under a sustained concurrent load.
