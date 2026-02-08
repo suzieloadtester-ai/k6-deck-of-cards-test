@@ -4,8 +4,11 @@ import { DeckService } from './services/deckService';
 
 
 export const options: Options = {
-  vus: 2,
-  duration: '30s',
+  stages: [
+    { duration: '5s', target: 2 },
+    { duration: '20s', target: 2 },
+    { duration: '5s', target: 0 },
+  ],
   thresholds: {
     'http_req_duration{name:CreateShuffle}': ['p(95)<5000'],
     'http_req_duration{name:DrawCards}': ['p(95)<5000'],
