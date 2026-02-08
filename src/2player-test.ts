@@ -15,22 +15,31 @@ export const options: Options = {
 };
 
 export default function () {
-  group('Advanced Deck Workflow', () => {
+  group('2 Player Deck Workflow', () => {
     const deckId = DeckService.createAndShuffle(1);
-    let cardCodes: string[] = []; 
+    let player1Cards: string[] = []; 
+    let player2Cards: string[] = [];
     
-    group('Draw Cards', () => {
+    group('Draw Cards for Player 1', () => {
       const numCards = Math.floor(Math.random() * 50) + 1;
       const drawRes = DeckService.drawCards(deckId, numCards);
       const cards = drawRes.json('cards') as Array<{ code: string }>;
-      cardCodes = cards.map(c => c.code);
+      player1Cards = cards.map(c => c.code);
     });
 
-    const pileName = 'player1';
+    group('Draw Cards for Player 2', () => {
+      const numCards = Math.floor(Math.random() * 50) + 1;
+      const drawRes = DeckService.drawCards(deckId, numCards);
+      const cards = drawRes.json('cards') as Array<{ code: string }>;
+      player2Cards = cards.map(c => c.code);
+    });
     
     group('Manage Piles', () => {
-      DeckService.addToPile(deckId, pileName, cardCodes);
-      DeckService.listPile(deckId, pileName);
+      DeckService.addToPile(deckId, 'player1', player1Cards);
+      DeckService.listPile(deckId, 'player1');
+      
+      DeckService.addToPile(deckId, 'player2', player2Cards);
+      DeckService.listPile(deckId, 'player2');
     });
   });
 
