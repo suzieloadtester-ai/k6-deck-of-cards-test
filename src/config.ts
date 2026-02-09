@@ -4,7 +4,8 @@ import { Trend } from 'k6/metrics';
 // Change this to switch between test scenarios: 'debug', 'peak', 'stress', 'endurance'
 export const TEST_SCENARIO: 'debug' | 'peak' | 'stress' | 'endurance' = 'debug';
 
-export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
+//export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
+export const BASE_URL = 'http://localhost:8000/api/deck';
 
 export const debugStages = [
   { target: 2, duration: '1s' },   // Ramp to 2 RPS over 1 second for debugging
