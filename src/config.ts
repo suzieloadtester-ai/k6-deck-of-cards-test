@@ -4,17 +4,12 @@ import { Trend } from 'k6/metrics';
 // Change this to switch between test scenarios: 'debug', 'peak', 'stress', 'endurance'
 export const TEST_SCENARIO: 'debug' | 'peak' | 'stress' | 'endurance' = 'debug';
 
-//export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
-//export const BASE_URL = 'http://localhost:8000/api/deck';
-
-// Access k6's global environment object
-// Use a type assertion so TypeScript doesn't complain about __ENV
 declare var __ENV: any;
 
 const ENV = __ENV.ENVIRONMENT || 'local';
 
 const URLS = {
-  local: 'http://localhost:8000/api/deck',
+  local: 'http://localhost:8000/api/deck', //make sure port matches docker
   prod: 'https://deckofcardsapi.com/api/deck'
 };
 
