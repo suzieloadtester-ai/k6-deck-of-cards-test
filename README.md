@@ -67,7 +67,7 @@ This section lists the components and activities in scope for testing.
 
 
 * **In Scope:** Deck management (creation/shuffling), card operations (drawing), and stateful piles (adding/listing).
-* **Out of Scope:** Frontend UI performance and external authentication providers.
+* **Out of Scope:** Frontend UI performance and external authentication providers. Returning cards to the deck. Static assets.
 
 
 ## **Performance Acceptance Criteria or SLAs**
