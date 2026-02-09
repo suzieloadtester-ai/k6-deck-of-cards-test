@@ -5,7 +5,24 @@ import { Trend } from 'k6/metrics';
 export const TEST_SCENARIO: 'debug' | 'peak' | 'stress' | 'endurance' = 'debug';
 
 //export const BASE_URL = 'https://deckofcardsapi.com/api/deck';
-export const BASE_URL = 'http://localhost:8000/api/deck';
+//export const BASE_URL = 'http://localhost:8000/api/deck';
+
+// Access k6's global environment object
+// Use a type assertion so TypeScript doesn't complain about __ENV
+declare var __ENV: any;
+
+const ENV = __ENV.ENVIRONMENT || 'local';
+
+const URLS = {
+  local: 'http://localhost:8000/api/deck',
+  prod: 'https://deckofcardsapi.com/api/deck'
+};
+
+export const BASE_URL = URLS[ENV as keyof typeof URLS] || URLS.local;
+
+// This will log in your terminal when the test starts
+console.log(`-- Launching Scenario: ${TEST_SCENARIO} on ${ENV} --`);
+
 
 export const debugStages = [
   { target: 2, duration: '1s' },   // Ramp to 2 RPS over 1 second for debugging

@@ -23,7 +23,9 @@
     "webpack-cli": "5.1.4",
     "webpack-glob-entries": "^1.0.1"
   },
-  "scripts": {
-    "bundle": "webpack"
-  }
+"scripts": {
+  "build": "webpack",
+  "k6:local": "npm run build && k6 run -e ENVIRONMENT=local",
+  "k6:prod": "npm run build && k6 run -e ENVIRONMENT=prod"
+}
 }
