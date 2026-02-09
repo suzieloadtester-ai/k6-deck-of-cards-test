@@ -29,4 +29,4 @@ jobs:
       - name: Run local k6 test
         uses: grafana/run-k6-action@v1
         with:
-          path: dist/get-200-status-test.js
+          path: dist/draw2shuffle-test.js
