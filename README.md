@@ -126,14 +126,14 @@ Simulates a 2-player card game workflow with sequential operations:
 - Player 1 draws 1-50 random cards
 - Player 2 draws 1-50 random cards  
 - Both players' cards are added to player-specific piles
-- Load: RPS-based ramping (0 → 2 RPS over 5s, hold at 2 RPS for 10s, ramp down in 5s)
+- Load: based on config
 
 ### **2playerParallel-test.ts** 
 Similar to 2player-test but with parallel execution:
 - Uses k6 scenarios to run Player 1 and Player 2 concurrently
 - Each player operates on their own separate deck
 - Tests parallel load handling with independent scenarios
-- Load: RPS-based ramping per scenario (0 → 2 RPS over 5s, hold at 2 RPS for 10s, ramp down in 5s)
+- Load: based on config
 - Pre-allocates 1 VU per scenario with max 10 VUs
 
 ### **draw2shuffle-test.ts**
@@ -141,7 +141,7 @@ Tests the advanced deck workflow:
 - Creates a shuffled deck with 1 deck shoe
 - Draws 1-50 random cards in a single operation
 - Adds all drawn cards to a player pile
-- Load: RPS-based ramping (0 → 2 RPS over 5s, hold at 2 RPS for 10s, ramp down in 5s)
+- Load: based on config
 - Simpler workflow for measuring core operations
 
 **Shared Configuration:**
@@ -196,7 +196,7 @@ This test determines system stability and reliability over an extended period at
 * **Traffic Pattern:** Moderate sustained load to identify memory leaks, connection issues, or performance degradation over time
 * **Metrics:** Monitoring for cumulative errors and gradual latency increases over the extended test duration
 
-## **Proposed Next Steps**
+## **Possible Next Steps**
 
 
 
