@@ -36,6 +36,29 @@ npm run bundle
 k6 run dist/get-200-status-test.js 
 
 
+### **4. Selecting Test Scenarios**
+
+All tests use the `TEST_SCENARIO` configuration variable in `src/config.ts` to determine which load profile to use. Change this variable to switch between test scenarios:
+
+```typescript
+// In src/config.ts, line 5
+export const TEST_SCENARIO: 'debug' | 'peak' | 'stress' | 'endurance' = 'debug';
+```
+
+**Available scenarios:**
+
+* **`debug`** - Fast ramping (2 RPS in 1s, hold 10s, ramp down 1s). Use for writing and debugging tests.
+* **`peak`** - Moderate sustained load (5 RPS over 1m, hold 10m, ramp down 1m). Use to measure sustained performance under normal conditions.
+* **`stress`** - High load test (10 RPS over 10m, hold 5m). Use to identify breaking points and maximum capacity.
+* **`endurance`** - Extended stability test (3 RPS over 1m, hold 55m, ramp down 1m). Use to detect memory leaks and performance degradation over time.
+
+Simply update the `TEST_SCENARIO` value and rebuild:
+
+npm run bundle
+k6 run dist/2player-test.js
+
+All tests will automatically use the selected scenario's load profile and VU settings.
+
 
 ## **Scope**
 
@@ -130,35 +153,48 @@ All three tests use performance thresholds, stages, and metrics defined in `conf
 
 ## **Scenario: Peak Load Test**
 
-This test determines how the system behaves under a sustained concurrent load.
+This test determines how the system behaves under a sustained, predictable request rate using an arrival-rate executor.
 
-
-### **Data Creation and Setup**
-
-Virtual Users (VUs) will initialize a 6-deck shoe to ensure a large pool of cards is available, preventing deck exhaustion errors during the test.
-
+**Configuration:** Uses `peakStages` from `config.ts`
+- **Ramp-up:** 0 to 5 RPS over 1 minute
+- **Plateau:** Sustain 5 RPS for 10 minutes
+- **Ramp-down:** 0 RPS over 1 minute
 
 ### **Workload Model and Distribution**
 
-
-
-* **Traffic:** 50 Concurrent Virtual Users.
-* **Pattern:** 2-minute ramp-up followed by a 10-minute plateau.
-* **Behavior:** Users will draw 2 cards and move them to a player-specific pile every iteration.
+* **Executor:** `ramping-arrival-rate` (focuses on throughput rather than VU count)
+* **Traffic Pattern:** Ramps to 5 RPS and maintains load to measure sustained performance
+* **Behavior:** Users perform sequential or parallel operations including deck creation, drawing 1–50 cards, and pile management
 
 
 ## **Scenario: Stress and Breakpoint Test**
 
-This test identifies the maximum capacity of the API before it returns rate-limiting (429) or server errors (5xx).
+This test identifies the maximum capacity of the API by pushing the request rate beyond the standard load threshold to observe when performance degrades.
 
+**Configuration:** Uses `stressStages` from `config.ts`
+- **Ramp-up:** 0 to 10 RPS over 10 minutes
+- **Plateau:** Sustain 10 RPS for 5 minutes (no ramp-down)
 
 ### **Workload Model and Distribution**
 
+* **Executor:** `ramping-arrival-rate`
+* **Traffic Pattern:** Incremental ramp to 10 RPS over 10 minutes to stress test the system
+* **Metrics:** Monitoring for `http_req_failed` spikes and `Trend_` metric degradation
 
+## **Scenario: Endurance Test**
 
-* **Pattern:** Linear ramp from 1 to 200 Virtual Users over 15 minutes.
-* **Metrics:** Monitoring for error rate spikes and significant latency degradation at specific VU counts.
+This test determines system stability and reliability over an extended period at a moderate, sustainable request rate.
 
+**Configuration:** Uses `enduranceStages` from `config.ts`
+- **Ramp-up:** 0 to 3 RPS over 1 minute
+- **Plateau:** Sustain 3 RPS for 55 minutes
+- **Ramp-down:** 0 RPS over 1 minute
+
+### **Workload Model and Distribution**
+
+* **Executor:** `ramping-arrival-rate`
+* **Traffic Pattern:** Moderate sustained load to identify memory leaks, connection issues, or performance degradation over time
+* **Metrics:** Monitoring for cumulative errors and gradual latency increases over the extended test duration
 
 ## **Deliverables**
 
