@@ -1,25 +1,15 @@
 import { sleep, group } from 'k6';
 import { DeckService } from './services/deckService';
-import { commonThresholds } from './config';
-
-const scenarioStages = [
-  { duration: '5s', target: 1 },
-  { duration: '20s', target: 1 },
-  { duration: '5s', target: 0 },
-];
+import { commonThresholds, rampingArrivalRateConfig } from './config';
 
 export const options = {
   scenarios: {
     player1: {
-      executor: 'ramping-vus',
-      startVUs: 0,
-      stages: scenarioStages,
+      ...rampingArrivalRateConfig,
       exec: 'player1',
     },
     player2: {
-      executor: 'ramping-vus',
-      startVUs: 0,
-      stages: scenarioStages,
+      ...rampingArrivalRateConfig,
       exec: 'player2',
     },
   },
