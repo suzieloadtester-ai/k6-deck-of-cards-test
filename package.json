@@ -25,6 +25,7 @@
   },
 "scripts": {
   "build": "webpack",
+  "bundle": "npm run build",
   "k6:local": "npm run build && k6 run -e ENVIRONMENT=local",
   "k6:prod": "npm run build && k6 run -e ENVIRONMENT=prod"
 }
