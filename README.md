@@ -219,3 +219,14 @@ Determines system stability and reliability over an extended period.
 * **Version Control:** GitHub.
 * **Engine:** Node.js / npm.
 * **Execution Tool:** k6 CLI.
+
+
+## **Proposed Next Steps**
+
+
+
+* Add remaining API calls: Implement tests for returning cards to the deck and fetching the static card image asset.
+* Parameterize plays: Allow specifying the number of players and cards drawn per play via configuration or CLI.
+* Per-player game files: Create separate test files where each virtual user runs a specific game flow (e.g., goldfish, poker).
+* Load models & scale: Add k6 load models and make use of a scale parameter in config.ts to vary test intensity.
+* Data-driven tests: Add a file containing deck IDs or other data and wire tests to read from it for data-driven testing.
