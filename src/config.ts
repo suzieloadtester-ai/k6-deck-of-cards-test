@@ -30,10 +30,10 @@ export const enduranceStages = [
 ];
 
 export const commonThresholds = {
-  'http_req_duration{name:CreateShuffle}': ['p(95)<5000'],
-  'http_req_duration{name:DrawCards}': ['p(95)<5000'],
-  'http_req_duration{name:AddToPile}': ['p(95)<5000'],
-  'http_req_duration{name:ListPile}': ['p(95)<5000'],
+  'http_req_duration{name:CreateShuffle}': ['p(95)<500'],
+  'http_req_duration{name:DrawCards}': ['p(95)<500'],
+  'http_req_duration{name:AddToPile}': ['p(95)<500'],
+  'http_req_duration{name:ListPile}': ['p(95)<500'],
 };
 
 // Scenario configurations
